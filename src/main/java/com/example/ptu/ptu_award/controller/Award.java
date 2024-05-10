@@ -37,13 +37,13 @@ public class Award {
     // db 리스트 조회 단 반환타입 지정 x
     @GetMapping("/before-awards")
     public List<Map<String, Object>> findAll() {
-        return jdbcTemplate.queryForList("SELECT * FROM ptuAward.award");
+        return jdbcTemplate.queryForList("SELECT * FROM sys.award");
     }
 
     // db 리스트 조회 단 반환타입 지정 o JPA
     @GetMapping("/after-awards")
     public List<AwardEntity> afterFindAll() {
-        String sql = "SELECT * FROM ptuAward.award";
+        String sql = "SELECT * FROM sys.award";
         return jdbcTemplate.query(sql, (rs, rowNum) -> new AwardEntity(
                 rs.getInt("id"),
                 rs.getString("title"),
@@ -63,7 +63,7 @@ public class Award {
          *  2. api body값안에 data를 실어보낸다
          *
          */
-        String sql = "INSERT INTO ptuAward.award (title, department_name, description, point, date_period, contact_info) " +
+        String sql = "INSERT INTO sys.award (title, department_name, description, point, date_period, contact_info) " +
                 "VALUES ('자바로 넣었음 제목', '부서명', '설명문', 5000, '2024-03-01~2024-05-01', '학생관4층')";
 
         try {
@@ -78,7 +78,7 @@ public class Award {
     // 단일 목록 조회
     @GetMapping("/award/{id}")
     public AwardEntity findAwardById(@PathVariable("id") int id) {
-        String sql = "SELECT * FROM ptuAward.award WHERE id = ?";
+        String sql = "SELECT * FROM sys.award WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) -> new AwardEntity(
                 rs.getInt("id"),
                 rs.getString("title"),
