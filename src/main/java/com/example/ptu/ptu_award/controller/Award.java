@@ -2,8 +2,11 @@ package com.example.ptu.ptu_award.controller;
 
 import com.example.ptu.ptu_award.models.AwardEntity;
 import com.example.ptu.ptu_award.models.Entity;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,11 +18,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
+import java.io.IOException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.ResponseEntity;
+import java.io.InputStream;
 @RestController
 public class Award {
 
     private final JdbcTemplate jdbcTemplate;
+
+
+    @Autowired
+    private ResourceLoader resourceLoader;
+
 
     public Award(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -88,5 +101,53 @@ public class Award {
                 rs.getString("date_period"),
                 rs.getString("contact_info")
         ));
+    }
+
+    @GetMapping(value = "/json", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    public ResponseEntity<Resource> getJsonFile() throws IOException {
+        Resource resource = resourceLoader.getResource("classpath:csvjson.json");
+        if (!resource.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity
+                .ok()
+                .body(resource);
+    }
+
+    @GetMapping("/insert-new")
+    public ResponseEntity<String> insertDataNew() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            // JSON 파일을 읽어옵니다. 여기서는 classpath에 위치한 json 파일을 읽어오는 예시입니다.
+            InputStream inputStream = getClass().getResourceAsStream("/csvjson.json");
+
+            // JSON 파일을 자바 객체로 변환합니다.
+            List<Map<String, Object>> jsonData = objectMapper.readValue(inputStream, List.class);
+
+            // 각 객체를 데이터베이스에 추가합니다.
+            for (Map<String, Object> data : jsonData) {
+                String sql = "INSERT INTO sys.award (title, department_name, description, point,filter_point,date_period, contact_info,link) " +
+                        "VALUES (?, ?, ?, ?, ?, ?,?,?)";
+
+                jdbcTemplate.update(sql,
+                        data.get("프로그램명"),
+                        data.get("부서명"),
+                        data.get("설명"),
+                        data.get("포인트"),
+                        data.get("필터포인트"),
+                        data.get("신청기간"),
+                        data.get("문의처"),
+                        data.get("상세")
+                );
+            }
+
+            return ResponseEntity.ok("Data inserted successfully");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error reading JSON file");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inserting data");
+        }
     }
 }
