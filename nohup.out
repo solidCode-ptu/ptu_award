@@ -1,0 +1,146 @@
+Starting a Gradle Daemon, 1 busy Daemon could not be reused, use --status for details
+Exception in thread "DisconnectableInputStream source reader" org.gradle.api.UncheckedIOException: java.io.IOException: Bad file descriptor
+	at org.gradle.internal.UncheckedException.throwAsUncheckedException(UncheckedException.java:62)
+	at org.gradle.internal.UncheckedException.throwAsUncheckedException(UncheckedException.java:41)
+	at org.gradle.util.internal.DisconnectableInputStream$1.run(DisconnectableInputStream.java:127)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method)
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:276)
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:282)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:343)
+	at org.gradle.util.internal.DisconnectableInputStream$1.run(DisconnectableInputStream.java:98)
+	... 1 more
+> Task :compileJava
+> Task :compileJava FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava'.
+> Could not resolve all files for configuration ':compileClasspath'.
+   > Could not download HikariCP-5.0.1.jar (com.zaxxer:HikariCP:5.0.1)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/com/zaxxer/HikariCP/5.0.1/HikariCP-5.0.1.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/com/zaxxer/HikariCP/5.0.1/HikariCP-5.0.1.jar'.
+            > repo.maven.apache.org: Temporary failure in name resolution
+   > Could not download spring-jdbc-6.1.6.jar (org.springframework:spring-jdbc:6.1.6)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/springframework/spring-jdbc/6.1.6/spring-jdbc-6.1.6.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/springframework/spring-jdbc/6.1.6/spring-jdbc-6.1.6.jar'.
+            > repo.maven.apache.org: Temporary failure in name resolution
+   > Could not download spring-boot-autoconfigure-3.2.5.jar (org.springframework.boot:spring-boot-autoconfigure:3.2.5)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-autoconfigure/3.2.5/spring-boot-autoconfigure-3.2.5.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-autoconfigure/3.2.5/spring-boot-autoconfigure-3.2.5.jar'.
+            > repo.maven.apache.org
+   > Could not download spring-boot-3.2.5.jar (org.springframework.boot:spring-boot:3.2.5)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot/3.2.5/spring-boot-3.2.5.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot/3.2.5/spring-boot-3.2.5.jar'.
+            > repo.maven.apache.org: Temporary failure in name resolution
+   > Could not download spring-boot-starter-logging-3.2.5.jar (org.springframework.boot:spring-boot-starter-logging:3.2.5)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-logging/3.2.5/spring-boot-starter-logging-3.2.5.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-logging/3.2.5/spring-boot-starter-logging-3.2.5.jar'.
+            > repo.maven.apache.org
+   > Could not download jakarta.annotation-api-2.1.1.jar (jakarta.annotation:jakarta.annotation-api:2.1.1)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar'.
+            > repo.maven.apache.org: Temporary failure in name resolution
+   > Could not download spring-context-6.1.6.jar (org.springframework:spring-context:6.1.6)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/springframework/spring-context/6.1.6/spring-context-6.1.6.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/springframework/spring-context/6.1.6/spring-context-6.1.6.jar'.
+            > repo.maven.apache.org
+   > Could not download spring-aop-6.1.6.jar (org.springframework:spring-aop:6.1.6)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/springframework/spring-aop/6.1.6/spring-aop-6.1.6.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/springframework/spring-aop/6.1.6/spring-aop-6.1.6.jar'.
+            > repo.maven.apache.org: Temporary failure in name resolution
+   > Could not download spring-tx-6.1.6.jar (org.springframework:spring-tx:6.1.6)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/springframework/spring-tx/6.1.6/spring-tx-6.1.6.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/springframework/spring-tx/6.1.6/spring-tx-6.1.6.jar'.
+            > repo.maven.apache.org
+   > Could not download spring-beans-6.1.6.jar (org.springframework:spring-beans:6.1.6)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/springframework/spring-beans/6.1.6/spring-beans-6.1.6.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/springframework/spring-beans/6.1.6/spring-beans-6.1.6.jar'.
+            > repo.maven.apache.org: Temporary failure in name resolution
+   > Could not download spring-expression-6.1.6.jar (org.springframework:spring-expression:6.1.6)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/springframework/spring-expression/6.1.6/spring-expression-6.1.6.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/springframework/spring-expression/6.1.6/spring-expression-6.1.6.jar'.
+            > repo.maven.apache.org
+   > Could not download spring-core-6.1.6.jar (org.springframework:spring-core:6.1.6)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.6/spring-core-6.1.6.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.6/spring-core-6.1.6.jar'.
+            > repo.maven.apache.org: Temporary failure in name resolution
+   > Could not download snakeyaml-2.2.jar (org.yaml:snakeyaml:2.2)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar'.
+            > repo.maven.apache.org
+   > Could not download jackson-datatype-jsr310-2.15.4.jar (com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.4)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.15.4/jackson-datatype-jsr310-2.15.4.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.15.4/jackson-datatype-jsr310-2.15.4.jar'.
+            > repo.maven.apache.org
+   > Could not download jackson-module-parameter-names-2.15.4.jar (com.fasterxml.jackson.module:jackson-module-parameter-names:2.15.4)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/com/fasterxml/jackson/module/jackson-module-parameter-names/2.15.4/jackson-module-parameter-names-2.15.4.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/com/fasterxml/jackson/module/jackson-module-parameter-names/2.15.4/jackson-module-parameter-names-2.15.4.jar'.
+            > repo.maven.apache.org
+   > Could not download jackson-annotations-2.15.4.jar (com.fasterxml.jackson.core:jackson-annotations:2.15.4)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.15.4/jackson-annotations-2.15.4.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.15.4/jackson-annotations-2.15.4.jar'.
+            > repo.maven.apache.org
+   > Could not download jackson-core-2.15.4.jar (com.fasterxml.jackson.core:jackson-core:2.15.4)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-core/2.15.4/jackson-core-2.15.4.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-core/2.15.4/jackson-core-2.15.4.jar'.
+            > repo.maven.apache.org
+   > Could not download jackson-datatype-jdk8-2.15.4.jar (com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.15.4)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.15.4/jackson-datatype-jdk8-2.15.4.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.15.4/jackson-datatype-jdk8-2.15.4.jar'.
+            > repo.maven.apache.org
+   > Could not download jackson-databind-2.15.4.jar (com.fasterxml.jackson.core:jackson-databind:2.15.4)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.15.4/jackson-databind-2.15.4.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.15.4/jackson-databind-2.15.4.jar'.
+            > repo.maven.apache.org: Temporary failure in name resolution
+   > Could not download tomcat-embed-websocket-10.1.20.jar (org.apache.tomcat.embed:tomcat-embed-websocket:10.1.20)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.20/tomcat-embed-websocket-10.1.20.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.20/tomcat-embed-websocket-10.1.20.jar'.
+            > repo.maven.apache.org
+   > Could not download tomcat-embed-core-10.1.20.jar (org.apache.tomcat.embed:tomcat-embed-core:10.1.20)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/apache/tomcat/embed/tomcat-embed-core/10.1.20/tomcat-embed-core-10.1.20.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/apache/tomcat/embed/tomcat-embed-core/10.1.20/tomcat-embed-core-10.1.20.jar'.
+            > repo.maven.apache.org
+   > Could not download tomcat-embed-el-10.1.20.jar (org.apache.tomcat.embed:tomcat-embed-el:10.1.20)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/apache/tomcat/embed/tomcat-embed-el/10.1.20/tomcat-embed-el-10.1.20.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/apache/tomcat/embed/tomcat-embed-el/10.1.20/tomcat-embed-el-10.1.20.jar'.
+            > repo.maven.apache.org
+   > Could not download micrometer-observation-1.12.5.jar (io.micrometer:micrometer-observation:1.12.5)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/io/micrometer/micrometer-observation/1.12.5/micrometer-observation-1.12.5.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/io/micrometer/micrometer-observation/1.12.5/micrometer-observation-1.12.5.jar'.
+            > repo.maven.apache.org
+   > Could not download logback-classic-1.4.14.jar (ch.qos.logback:logback-classic:1.4.14)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/ch/qos/logback/logback-classic/1.4.14/logback-classic-1.4.14.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/ch/qos/logback/logback-classic/1.4.14/logback-classic-1.4.14.jar'.
+            > repo.maven.apache.org
+   > Could not download log4j-to-slf4j-2.21.1.jar (org.apache.logging.log4j:log4j-to-slf4j:2.21.1)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-to-slf4j/2.21.1/log4j-to-slf4j-2.21.1.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-to-slf4j/2.21.1/log4j-to-slf4j-2.21.1.jar'.
+            > repo.maven.apache.org
+   > Could not download jul-to-slf4j-2.0.13.jar (org.slf4j:jul-to-slf4j:2.0.13)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/slf4j/jul-to-slf4j/2.0.13/jul-to-slf4j-2.0.13.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/slf4j/jul-to-slf4j/2.0.13/jul-to-slf4j-2.0.13.jar'.
+            > repo.maven.apache.org
+   > Could not download slf4j-api-2.0.13.jar (org.slf4j:slf4j-api:2.0.13)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/2.0.13/slf4j-api-2.0.13.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/2.0.13/slf4j-api-2.0.13.jar'.
+            > repo.maven.apache.org
+   > Could not download spring-jcl-6.1.6.jar (org.springframework:spring-jcl:6.1.6)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/org/springframework/spring-jcl/6.1.6/spring-jcl-6.1.6.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/org/springframework/spring-jcl/6.1.6/spring-jcl-6.1.6.jar'.
+            > repo.maven.apache.org
+   > Could not download micrometer-commons-1.12.5.jar (io.micrometer:micrometer-commons:1.12.5)
+      > Could not get resource 'https://repo.maven.apache.org/maven2/io/micrometer/micrometer-commons/1.12.5/micrometer-commons-1.12.5.jar'.
+         > Could not GET 'https://repo.maven.apache.org/maven2/io/micrometer/micrometer-commons/1.12.5/micrometer-commons-1.12.5.jar'.
+            > repo.maven.apache.org
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 36m 7s
+1 actionable task: 1 executed
