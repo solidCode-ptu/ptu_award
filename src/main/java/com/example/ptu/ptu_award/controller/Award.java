@@ -1,6 +1,7 @@
 package com.example.ptu.ptu_award.controller;
 
 import com.example.ptu.ptu_award.models.AwardEntity;
+import com.example.ptu.ptu_award.models.DetailAward;
 import com.example.ptu.ptu_award.models.Entity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,19 +51,19 @@ public class Award {
     // db 리스트 조회 단 반환타입 지정 x
     @GetMapping("/before-awards")
     public List<Map<String, Object>> findAll() {
-        return jdbcTemplate.queryForList("SELECT * FROM sys.award");
+        return jdbcTemplate.queryForList("SELECT id, title, date_period, filter_point FROM sys.award");
     }
 
     // db 리스트 조회 단 반환타입 지정 o JPA
     @GetMapping("/after-awards")
     public List<AwardEntity> afterFindAll() {
-        String sql = "SELECT * FROM sys.award";
+        String sql = "SELECT id, title, date_period, filter_point FROM sys.award";
         return jdbcTemplate.query(sql, (rs, rowNum) -> new AwardEntity(
                 rs.getInt("id"),
                 rs.getString("title"),
                 rs.getString("department_name"),
                 rs.getString("description"),
-                rs.getInt("point"),
+                rs.getString("point"),
                 rs.getString("date_period"),
                 rs.getString("contact_info")
         ));
@@ -90,16 +91,16 @@ public class Award {
 
     // 단일 목록 조회
     @GetMapping("/award/{id}")
-    public AwardEntity findAwardById(@PathVariable("id") int id) {
-        String sql = "SELECT * FROM sys.award WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) -> new AwardEntity(
-                rs.getInt("id"),
+    public DetailAward findAwardById(@PathVariable("id") int id) {
+        String sql = "SELECT department_name, title, date_period, description, point, contact_info, link FROM sys.award WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) -> new DetailAward(
                 rs.getString("title"),
                 rs.getString("department_name"),
                 rs.getString("description"),
-                rs.getInt("point"),
+                rs.getString("point"),
                 rs.getString("date_period"),
-                rs.getString("contact_info")
+                rs.getString("contact_info"),
+                rs.getString("link")
         ));
     }
 
