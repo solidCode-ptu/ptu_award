@@ -2,6 +2,7 @@ package com.example.ptu.ptu_award.controller;
 
 import com.example.ptu.ptu_award.models.AwardEntity;
 import com.example.ptu.ptu_award.models.DetailAward;
+import com.example.ptu.ptu_award.models.FilterAward;
 import com.example.ptu.ptu_award.models.Entity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +98,58 @@ public class Award {
                 rs.getString("title"),
                 rs.getString("department_name"),
                 rs.getString("description"),
+                rs.getString("point"),
+                rs.getString("date_period"),
+                rs.getString("contact_info"),
+                rs.getString("link")
+        ));
+    }
+
+    // 필터 목록 조회
+    @GetMapping("/filter-award/{filterType}/{value}")
+    public List<FilterAward> filterAwardByValue(@PathVariable("filterType") String filterType, @PathVariable("value") String value) {
+        String sql = "";
+        Object[] params = null;
+
+        if (filterType.equals("point")) {
+            sql = "SELECT department_name, title, date_period, description, filter_point, point, contact_info, link " +
+                    "FROM sys.award " +
+                    "WHERE CAST(REGEXP_REPLACE(filter_point, '[^0-9]', '') AS UNSIGNED) >= ?";
+            params = new Object[]{Integer.parseInt(value)};
+        } else if (filterType.equals("date")) {
+            sql = "SELECT department_name, title, date_period, description, filter_point, point, contact_info, link " +
+                    "FROM sys.award " +
+                    "WHERE STR_TO_DATE(SUBSTRING_INDEX(SUBSTRING_INDEX(date_period, '~', -1), '(', 1), '%Y.%m.%d') >= ?";
+            params = new Object[]{value};
+        } else {
+            throw new IllegalArgumentException("Invalid filter type: " + filterType);
+        }
+
+        return jdbcTemplate.query(sql, params, (rs, rowNum) -> new FilterAward(
+                rs.getString("title"),
+                rs.getString("department_name"),
+                rs.getString("description"),
+                rs.getString("filter_point"),
+                rs.getString("point"),
+                rs.getString("date_period"),
+                rs.getString("contact_info"),
+                rs.getString("link")
+        ));
+    }
+
+    @GetMapping("/filter-award/both/{value1}/{value2}")
+    public List<FilterAward> filterAwardByBothValues(@PathVariable("value1") String value1, @PathVariable("value2") String value2) {
+        String sql = "SELECT department_name, title, date_period, description, filter_point, point, contact_info, link " +
+                "FROM sys.award " +
+                "WHERE CAST(REGEXP_REPLACE(filter_point, '[^0-9]', '') AS UNSIGNED) >= ? " +
+                "AND STR_TO_DATE(SUBSTRING_INDEX(SUBSTRING_INDEX(date_period, '~', -1), '(', 1), '%Y.%m.%d') >= ?";
+        Object[] params = new Object[]{Integer.parseInt(value1), value2};
+
+        return jdbcTemplate.query(sql, params, (rs, rowNum) -> new FilterAward(
+                rs.getString("title"),
+                rs.getString("department_name"),
+                rs.getString("description"),
+                rs.getString("filter_point"),
                 rs.getString("point"),
                 rs.getString("date_period"),
                 rs.getString("contact_info"),
