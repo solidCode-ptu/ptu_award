@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +18,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.WeekFields;
+import java.util.*;
 
 @RestController
 public class Breakfast {
@@ -153,6 +153,25 @@ public class Breakfast {
 
 
         return menuList;
+    }
+
+    @GetMapping("/thisweek-info")
+    public List<Map<String,Object>> thisWeekInfo(){
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/dd");
+        String monday = today.with(DayOfWeek.MONDAY).format(formatter);
+        String sunday = today.with(DayOfWeek.SUNDAY).format(formatter);
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        int weekNumber = today.get(weekFields.weekOfMonth());
+        List<Map<String,Object>> list = new ArrayList<>();
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        map.put("week", weekNumber);
+        map.put("start_date", monday);
+        map.put("end_date", sunday);
+
+        list.add(map);
+        return list;
     }
 
 
