@@ -104,7 +104,16 @@ public class Breakfast {
     public List<Map<String, Object>> findtodayMenu(){
         LocalDate now = LocalDate.now();
         String day = String.valueOf(now.getDayOfMonth());
-        return jdbcTemplate.queryForList("SELECT date,menu FROM sys.breakfast WHERE date LIKE \'% "+day+"일%\'");
+        List<Map<String, Object>> menuList = jdbcTemplate.queryForList("SELECT date,menu FROM sys.breakfast WHERE date LIKE \'% "+day+"일%\'");
+
+        for (Map<String, Object> row : menuList) {
+            // "메뉴" 키의 값이 없거나 빈 문자열이면 "미지정"으로 설정
+            String menu = (String) row.get("menu");
+            if (menu == "" || menu.trim().isEmpty()) {
+                row.put("menu", "미지정");
+            }
+        }
+       return menuList;
     }
 
     @GetMapping("/thisweek-menu")
@@ -115,7 +124,35 @@ public class Breakfast {
         String menuQuery = "SELECT date, menu FROM sys.breakfast WHERE id BETWEEN (SELECT id FROM sys.breakfast WHERE date LIKE \'% " +monday.getDayOfMonth()+
                 "일%\') AND (SELECT id FROM sys.breakfast WHERE date LIKE \'% " + friday.getDayOfMonth()+
                 "일%\')";
-        return jdbcTemplate.queryForList(menuQuery);
+        List<Map<String, Object>> menuList = jdbcTemplate.queryForList(menuQuery);
+
+        for (Map<String, Object> row : menuList) {
+            // "메뉴" 키의 값이 없거나 빈 문자열이면 "미지정"으로 설정
+            String menu = (String) row.get("menu");
+            if (menu == "" || menu.trim().isEmpty()) {
+                row.put("menu", "미운영");
+            }
+        }
+        return menuList;
+    }
+
+    @GetMapping("/weekly-menu")
+    public List<Map<String, Object>> showWeeklyMenu(){
+        LocalDate now = LocalDate.now();
+        LocalDate end = now.with(DayOfWeek.SUNDAY);
+        int startDay = now.getDayOfMonth();
+        int endDay = end.getDayOfMonth();
+        String sql = "SELECT date, menu FROM sys.breakfast WHERE id BETWEEN (SELECT id FROM sys.breakfast WHERE date LIKE \'% " +startDay+ "일%\') AND (SELECT id FROM sys.breakfast WHERE date LIKE \'% " + endDay+ "일%\')";
+        List<Map<String, Object>> menuList = jdbcTemplate.queryForList(sql);
+        for (Map<String, Object> row : menuList) {
+            String menu = (String) row.get("menu");
+            if (menu == "" || menu.trim().isEmpty()) {
+                row.put("menu", "미운영");
+            }
+        }
+
+
+        return menuList;
     }
 
 
