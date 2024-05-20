@@ -41,37 +41,6 @@ public class Award {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // 일반 리스트 조회
-    @GetMapping("/h1")
-    public List<Entity> getPeople() {
-        List<Entity> people = new ArrayList<Entity>();
-        people.add(new Entity(1, "김민서"));
-        people.add(new Entity(2, "이재윤"));
-        return people;
-    }
-
-    // db 리스트 조회 단 반환타입 지정 x
-    @Operation(description = "(솔선수범) 리스트 조회")
-    @GetMapping("/before-awards")
-    public List<Map<String, Object>> findAll() {
-        return jdbcTemplate.queryForList("SELECT id, title, date_period, filter_point FROM sys.award");
-    }
-
-    // db 리스트 조회 단 반환타입 지정 o JPA
-    @GetMapping("/after-awards")
-    public List<AwardEntity> afterFindAll() {
-        String sql = "SELECT id, title, date_period, filter_point FROM sys.award";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new AwardEntity(
-                rs.getInt("id"),
-                rs.getString("title"),
-                rs.getString("department_name"),
-                rs.getString("description"),
-                rs.getString("point"),
-                rs.getString("date_period"),
-                rs.getString("contact_info")
-        ));
-    }
-
     // db 데이터 추가
     @Operation(description = "(솔선수범) 데이터 추가")
     @GetMapping("/insert")

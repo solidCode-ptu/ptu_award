@@ -141,6 +141,7 @@ public class Breakfast {
         return menuList;
     }
 
+    @Operation(description = "오늘부터 이번주 일요일까지 아침밥 조회")
     @GetMapping("/weekly-menu")
     public List<Map<String, Object>> showWeeklyMenu(){
         LocalDate now = LocalDate.now();
