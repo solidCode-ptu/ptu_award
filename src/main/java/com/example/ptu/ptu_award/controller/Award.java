@@ -106,26 +106,29 @@ public class Award {
     }
 
     // 필터 목록 조회
-    @GetMapping("/filter-award/{filterType}/{value}")
-    public List<FilterAward> filterAwardByValue(@PathVariable("filterType") String filterType, @PathVariable("value") String value) {
-        String sql = "";
-        Object[] params = null;
+    @GetMapping("/filter-award")
+    public List<FilterAward> filterAward(
+            @RequestParam(value = "filterType", required = false) String filterType,
+            @RequestParam(value = "point", required = false) String point,
+            @RequestParam(value = "date", required = false) String date) {
+        String sql = "SELECT department_name, title, date_period, description, filter_point, point, contact_info, link FROM sys.award WHERE 1=1";
+        List<Object> params = new ArrayList<>();
 
-        if (filterType.equals("point")) {
-            sql = "SELECT department_name, title, date_period, description, filter_point, point, contact_info, link " +
-                    "FROM sys.award " +
-                    "WHERE CAST(REGEXP_REPLACE(filter_point, '[^0-9]', '') AS UNSIGNED) >= ?";
-            params = new Object[]{Integer.parseInt(value)};
-        } else if (filterType.equals("date")) {
-            sql = "SELECT department_name, title, date_period, description, filter_point, point, contact_info, link " +
-                    "FROM sys.award " +
-                    "WHERE STR_TO_DATE(SUBSTRING_INDEX(SUBSTRING_INDEX(date_period, '~', -1), '(', 1), '%Y.%m.%d') >= ?";
-            params = new Object[]{value};
+        if ("point".equals(filterType) && point != null) {
+            sql += " AND CAST(REGEXP_REPLACE(filter_point, '[^0-9]', '') AS UNSIGNED) >= ?";
+            params.add(Integer.parseInt(point));
+        } else if ("date".equals(filterType) && date != null) {
+            sql += " AND STR_TO_DATE(SUBSTRING_INDEX(SUBSTRING_INDEX(date_period, '~', -1), '(', 1), '%Y.%m.%d') >= ?";
+            params.add(date);
+        } else if (point != null && date != null) {
+            sql += " AND CAST(REGEXP_REPLACE(filter_point, '[^0-9]', '') AS UNSIGNED) >= ? AND STR_TO_DATE(SUBSTRING_INDEX(SUBSTRING_INDEX(date_period, '~', -1), '(', 1), '%Y.%m.%d') >= ?";
+            params.add(Integer.parseInt(point));
+            params.add(date);
         } else {
-            throw new IllegalArgumentException("Invalid filter type: " + filterType);
+            throw new IllegalArgumentException("Invalid filter type or missing values");
         }
 
-        return jdbcTemplate.query(sql, params, (rs, rowNum) -> new FilterAward(
+        return jdbcTemplate.query(sql, params.toArray(), (rs, rowNum) -> new FilterAward(
                 rs.getString("title"),
                 rs.getString("department_name"),
                 rs.getString("description"),
@@ -137,25 +140,6 @@ public class Award {
         ));
     }
 
-    @GetMapping("/filter-award/both/{value1}/{value2}")
-    public List<FilterAward> filterAwardByBothValues(@PathVariable("value1") String value1, @PathVariable("value2") String value2) {
-        String sql = "SELECT department_name, title, date_period, description, filter_point, point, contact_info, link " +
-                "FROM sys.award " +
-                "WHERE CAST(REGEXP_REPLACE(filter_point, '[^0-9]', '') AS UNSIGNED) >= ? " +
-                "AND STR_TO_DATE(SUBSTRING_INDEX(SUBSTRING_INDEX(date_period, '~', -1), '(', 1), '%Y.%m.%d') >= ?";
-        Object[] params = new Object[]{Integer.parseInt(value1), value2};
-
-        return jdbcTemplate.query(sql, params, (rs, rowNum) -> new FilterAward(
-                rs.getString("title"),
-                rs.getString("department_name"),
-                rs.getString("description"),
-                rs.getString("filter_point"),
-                rs.getString("point"),
-                rs.getString("date_period"),
-                rs.getString("contact_info"),
-                rs.getString("link")
-        ));
-    }
 
     @GetMapping(value = "/json", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
     public ResponseEntity<Resource> getJsonFile() throws IOException {
