@@ -3,6 +3,7 @@ package com.example.ptu.ptu_award.controller;
 import com.example.ptu.ptu_award.models.BreakfastEntity;
 import com.example.ptu.ptu_award.models.DetailBreakfast;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -33,6 +34,7 @@ public class Breakfast {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Operation(description = "모든 아침밥 메뉴 조회")
     @GetMapping("/before-breakfast")
     public List<Map<String, Object>> findAll() {
         return jdbcTemplate.queryForList("SELECT id, date, menu FROM sys.breakfast");
@@ -48,7 +50,7 @@ public class Breakfast {
         ));
     }
 
-
+    @Operation(description = "아침밥 메뉴 추가")
     @GetMapping("/insert-breakfast")
     public ResponseEntity<String> insertbfdata(){
         ObjectMapper objectMapper = new ObjectMapper();
@@ -80,6 +82,7 @@ public class Breakfast {
         }
     }
 
+    @Operation(description = "id로 아침밥 메뉴 조회")
     @GetMapping("/breakfast/{id}")
     public DetailBreakfast findbreakfastById(@PathVariable("id") int id) {
         String sql = "SELECT date, menu FROM sys.breakfast WHERE id = ?";
@@ -100,6 +103,7 @@ public class Breakfast {
                 .body(resource);
     }
 
+    @Operation(description = "오늘 아침밥 메뉴 조회")
     @GetMapping("/today-menu")
     public List<Map<String, Object>> findtodayMenu(){
         LocalDate now = LocalDate.now();
@@ -107,6 +111,7 @@ public class Breakfast {
         return jdbcTemplate.queryForList("SELECT date,menu FROM sys.breakfast WHERE date LIKE \'% "+day+"일%\'");
     }
 
+    @Operation(description = "이번주 아침밥 메뉴 조회")
     @GetMapping("/thisweek-menu")
     public List<Map<String, Object>> findthisweekMenu(){
         LocalDate now = LocalDate.now();
