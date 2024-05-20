@@ -104,7 +104,7 @@ public class Breakfast {
     public List<Map<String, Object>> findtodayMenu(){
         LocalDate now = LocalDate.now();
         String day = String.valueOf(now.getDayOfMonth());
-        return jdbcTemplate.queryForList("SELECT date, menu FROM sys.breakfast WHERE id = " + day);
+        return jdbcTemplate.queryForList("SELECT date,menu FROM sys.breakfast WHERE date LIKE \'% "+day+"일%\'");
     }
 
     @GetMapping("/thisweek-menu")
@@ -112,10 +112,10 @@ public class Breakfast {
         LocalDate now = LocalDate.now();
         LocalDate monday = now.with(DayOfWeek.MONDAY);
         LocalDate friday = now.with(DayOfWeek.FRIDAY);
-
-        String sql = String.format("SELECT date, menu FROM sys.breakfast WHERE id BETWEEN %d AND %d", monday.getDayOfMonth(), friday.getDayOfMonth());
-
-        return jdbcTemplate.queryForList(sql);
+        String menuQuery = "SELECT date, menu FROM sys.breakfast WHERE id BETWEEN (SELECT id FROM sys.breakfast WHERE date LIKE \'% " +monday.getDayOfMonth()+
+                "일%\') AND (SELECT id FROM sys.breakfast WHERE date LIKE \'% " + friday.getDayOfMonth()+
+                "일%\')";
+        return jdbcTemplate.queryForList(menuQuery);
     }
 
 

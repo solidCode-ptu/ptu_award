@@ -174,7 +174,6 @@ public class Award {
         try {
             // JSON 파일을 읽어옵니다. 여기서는 classpath에 위치한 json 파일을 읽어오는 예시입니다.
             InputStream inputStream = getClass().getResourceAsStream("/csvjson.json");
-
             // JSON 파일을 자바 객체로 변환합니다.
             List<Map<String, Object>> jsonData = objectMapper.readValue(inputStream, List.class);
 
@@ -182,7 +181,6 @@ public class Award {
             for (Map<String, Object> data : jsonData) {
                 String sql = "INSERT INTO sys.award (title, department_name, description, point,filter_point,date_period, contact_info,link) " +
                         "VALUES (?, ?, ?, ?, ?, ?,?,?)";
-
                 jdbcTemplate.update(sql,
                         data.get("프로그램명"),
                         data.get("부서명"),
@@ -194,7 +192,6 @@ public class Award {
                         data.get("상세")
                 );
             }
-
             return ResponseEntity.ok("Data inserted successfully");
         } catch (IOException e) {
             e.printStackTrace();
