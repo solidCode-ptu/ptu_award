@@ -1,6 +1,7 @@
 package com.example.ptu.ptu_award.models;
 
 public record FilterAward(
+        int id,
         String title,
         String department_name,
         String description,

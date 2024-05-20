@@ -5,6 +5,7 @@ import com.example.ptu.ptu_award.models.DetailAward;
 import com.example.ptu.ptu_award.models.FilterAward;
 import com.example.ptu.ptu_award.models.Entity;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
@@ -40,37 +41,8 @@ public class Award {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // 일반 리스트 조회
-    @GetMapping("/h1")
-    public List<Entity> getPeople() {
-        List<Entity> people = new ArrayList<Entity>();
-        people.add(new Entity(1, "김민서"));
-        people.add(new Entity(2, "이재윤"));
-        return people;
-    }
-
-    // db 리스트 조회 단 반환타입 지정 x
-    @GetMapping("/before-awards")
-    public List<Map<String, Object>> findAll() {
-        return jdbcTemplate.queryForList("SELECT id, title, date_period, filter_point FROM sys.award");
-    }
-
-    // db 리스트 조회 단 반환타입 지정 o JPA
-    @GetMapping("/after-awards")
-    public List<AwardEntity> afterFindAll() {
-        String sql = "SELECT id, title, date_period, filter_point FROM sys.award";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new AwardEntity(
-                rs.getInt("id"),
-                rs.getString("title"),
-                rs.getString("department_name"),
-                rs.getString("description"),
-                rs.getString("point"),
-                rs.getString("date_period"),
-                rs.getString("contact_info")
-        ));
-    }
-
     // db 데이터 추가
+    @Operation(description = "(솔선수범) 데이터 추가")
     @GetMapping("/insert")
     public ResponseEntity<String> insertData() {
         /**
@@ -91,6 +63,7 @@ public class Award {
     }
 
     // 단일 목록 조회
+    @Operation(description = "(솔선수범) id 입력하여 조회")
     @GetMapping("/award/{id}")
     public DetailAward findAwardById(@PathVariable("id") int id) {
         String sql = "SELECT department_name, title, date_period, description, point, contact_info, link FROM sys.award WHERE id = ?";
@@ -106,15 +79,19 @@ public class Award {
     }
 
     // 필터 목록 조회
+    @Operation(description = "(솔선수범) 필터 목록 조회 / ex1) filterType = point, point = 300000, date = null / ex2) filterType = null, point = 300000, date = 20240520")
     @GetMapping("/filter-award")
     public List<FilterAward> filterAward(
             @RequestParam(value = "filterType", required = false) String filterType,
             @RequestParam(value = "point", required = false) String point,
             @RequestParam(value = "date", required = false) String date) {
-        String sql = "SELECT department_name, title, date_period, description, filter_point, point, contact_info, link FROM sys.award WHERE 1=1";
+        String sql = "SELECT id, department_name, title, date_period, description, filter_point, point, contact_info, link FROM sys.award WHERE 1=1";
         List<Object> params = new ArrayList<>();
 
-        if ("point".equals(filterType) && point != null) {
+        if(filterType == null && point == null && date == null){
+
+        }
+        else if ("point".equals(filterType) && point != null) {
             sql += " AND CAST(REGEXP_REPLACE(filter_point, '[^0-9]', '') AS UNSIGNED) >= ?";
             params.add(Integer.parseInt(point));
         } else if ("date".equals(filterType) && date != null) {
@@ -129,6 +106,7 @@ public class Award {
         }
 
         return jdbcTemplate.query(sql, params.toArray(), (rs, rowNum) -> new FilterAward(
+                rs.getInt("id"),
                 rs.getString("title"),
                 rs.getString("department_name"),
                 rs.getString("description"),
