@@ -35,22 +35,12 @@ public class Breakfast {
     }
 
     @Operation(description = "모든 아침밥 메뉴 조회")
-    @GetMapping("/before-breakfast")
+    @GetMapping("/all-breakfast")
     public List<Map<String, Object>> findAll() {
         return jdbcTemplate.queryForList("SELECT id, date, menu FROM sys.breakfast");
     }
 
-    @GetMapping("/after-breakfast")
-    public List<BreakfastEntity> afterFindAll() {
-        String sql = "SELECT id, date, manu FROM sys.breakfast";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new BreakfastEntity(
-                rs.getInt("id"),
-                rs.getString("date"),
-                rs.getString("menu")
-        ));
-    }
-
-    @Operation(description = "아침밥 메뉴 추가")
+    @Operation(description = "아침밥 메뉴 데이터 저장")
     @GetMapping("/insert-breakfast")
     public ResponseEntity<String> insertbfdata(){
         ObjectMapper objectMapper = new ObjectMapper();
@@ -126,6 +116,7 @@ public class Breakfast {
         LocalDate now = LocalDate.now();
         LocalDate monday = now.with(DayOfWeek.MONDAY);
         LocalDate friday = now.with(DayOfWeek.FRIDAY);
+
         String menuQuery = "SELECT date, menu FROM sys.breakfast WHERE id BETWEEN (SELECT id FROM sys.breakfast WHERE date LIKE \'% " +monday.getDayOfMonth()+
                 "일%\') AND (SELECT id FROM sys.breakfast WHERE date LIKE \'% " + friday.getDayOfMonth()+
                 "일%\')";
@@ -142,14 +133,16 @@ public class Breakfast {
     }
 
     @Operation(description = "오늘부터 이번주 일요일까지 아침밥 조회")
-    @GetMapping("/weekly-menu")
-    public List<Map<String, Object>> showWeeklyMenu(){
+    @GetMapping("/today2sunday-menu")
+    public List<Map<String, Object>> findToday2sundayMenu(){
         LocalDate now = LocalDate.now();
         LocalDate end = now.with(DayOfWeek.SUNDAY);
         int startDay = now.getDayOfMonth();
         int endDay = end.getDayOfMonth();
+
         String sql = "SELECT date, menu FROM sys.breakfast WHERE id BETWEEN (SELECT id FROM sys.breakfast WHERE date LIKE \'% " +startDay+ "일%\') AND (SELECT id FROM sys.breakfast WHERE date LIKE \'% " + endDay+ "일%\')";
         List<Map<String, Object>> menuList = jdbcTemplate.queryForList(sql);
+
         for (Map<String, Object> row : menuList) {
             String menu = (String) row.get("menu");
             if (menu == "" || menu.trim().isEmpty()) {
@@ -161,23 +154,26 @@ public class Breakfast {
         return menuList;
     }
 
+    @Operation(description = "이번주 주차와 날짜 정보 반환")
     @GetMapping("/thisweek-info")
     public List<Map<String,Object>> thisWeekInfo(){
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/dd");
+
         String monday = today.with(DayOfWeek.MONDAY).format(formatter);
         String sunday = today.with(DayOfWeek.SUNDAY).format(formatter);
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
         int weekNumber = today.get(weekFields.weekOfMonth());
-        List<Map<String,Object>> list = new ArrayList<>();
+
+        List<Map<String,Object>> infoList = new ArrayList<>();
         Map<String, Object> map = new LinkedHashMap<>();
 
         map.put("week", weekNumber);
         map.put("start_date", monday);
         map.put("end_date", sunday);
 
-        list.add(map);
-        return list;
+        infoList.add(map);
+        return infoList;
     }
 
 
