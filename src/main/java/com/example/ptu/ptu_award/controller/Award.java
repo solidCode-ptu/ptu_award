@@ -135,7 +135,7 @@ public class Award {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             // JSON 파일을 읽어옵니다. 여기서는 classpath에 위치한 json 파일을 읽어오는 예시입니다.
-            InputStream inputStream = getClass().getResourceAsStream("/csvjson.json");
+            InputStream inputStream = getClass().getResourceAsStream("/awards.json");
             // JSON 파일을 자바 객체로 변환합니다.
             List<Map<String, Object>> jsonData = objectMapper.readValue(inputStream, List.class);
 

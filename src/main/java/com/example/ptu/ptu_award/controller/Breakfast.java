@@ -137,12 +137,11 @@ public class Breakfast {
     public List<Map<String, Object>> findToday2sundayMenu(){
         LocalDate now = LocalDate.now();
         LocalDate end = now.with(DayOfWeek.SUNDAY);
-        int startDay = now.getDayOfMonth();
-        int endDay = end.getDayOfMonth();
-
-        String sql = "SELECT date, menu FROM sys.breakfast WHERE id BETWEEN (SELECT id FROM sys.breakfast WHERE date LIKE \'% " +startDay+ "일%\') AND (SELECT id FROM sys.breakfast WHERE date LIKE \'% " + endDay+ "일%\')";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M월 d일");
+        String startDay = now.format(formatter);
+        String endDay = end.format(formatter);
+        String sql = "SELECT date, menu FROM sys.breakfast WHERE id BETWEEN (SELECT id FROM sys.breakfast WHERE date LIKE \'%" +startDay+ "%\') AND (SELECT id FROM sys.breakfast WHERE date LIKE \'%" + endDay+ "%\')";
         List<Map<String, Object>> menuList = jdbcTemplate.queryForList(sql);
-
         for (Map<String, Object> row : menuList) {
             String menu = (String) row.get("menu");
             if (menu == "" || menu.trim().isEmpty()) {
